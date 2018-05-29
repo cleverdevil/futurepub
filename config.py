@@ -8,13 +8,8 @@ server = {
 app = {
     'root': 'futurepub.controllers.root.RootController',
     'modules': ['futurepub'],
-    'static_root': '%(confdir)s/public',
     'template_path': '%(confdir)s/futurepub/templates',
-    'debug': True,
-    'errors': {
-        404: '/error/404',
-        '__force_dict__': True
-    }
+    'debug': False,
 }
 
 logging = {
@@ -45,10 +40,3 @@ logging = {
         }
     }
 }
-
-# Custom Configurations must be in Python dictionary format::
-#
-# foo = {'bar':'baz'}
-#
-# All configurations are accessible at::
-# pecan.conf

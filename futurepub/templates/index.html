@@ -7,10 +7,103 @@
   <title>Futurepub: Scheduled Micropub</title>
   <meta name="description" content="An open endpoint for scheduling micropub requests.">
   <meta name="author" content="Jonathan LaCour - https://cleverdevil.io">
+  
+  <style type="text/css">
+    body {
+      background: #333;
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    header, main {
+      text-align: left;
+      background: #fff;
+      margin: 1em auto;
+      padding: 0.5em 2em;
+      width: 40em;
+    }
+
+    pre {
+      background: #ddd;
+      padding: 0.5em 1.0em;
+    }
+  </style>
 </head>
 
 <body>
-  <h1>Futurepub</h1>
-  <p>A micropub endpoint for scheduling future micropub requests.</p>
+  <header>
+    <h1>Futurepub</h1>
+    <p>
+      Scheduled publishing for <a href="https://indieweb.org/Micropub">Micropub</a> servers.
+    </p>
+  </header>
+
+  <main>
+    
+    <section>
+      <h2>Using Futurepub</h2>
+      <p>
+        Futurepub provides an easy way to schedule a post to be published to
+        any Micropub endpoint at a future date and time. To use Futurepub,
+        simply treat Futurepub as a Micropub endpoint via 
+        <code>https://futurepub.cleverdevil.io</code>. Futurepub only supports
+        <code>JSON</code> style Micropub requests.
+      </p>
+      <p>
+        As part of your <code>JSON</code> payload, you must include two
+        properties: <code>mp-destination</code>, which should be the endpoint
+        that you want to publish to, and <code>published</code>, which will be
+        the date/time stamp that specifies when you want to publish. 
+      </p>
+      <p>
+        For authentication, simply pass the Bearer Token for your target
+        Micropub endpoint in an <code>Authorization</code> HTTP header.
+      </p>
+    </section>
+    
+    <section>
+      <h2>Sample</h2>
+      <p>
+        If you wanted to publish "Hello, World" content to a Micropub endpoint
+        available at <code>https://example.com/micropub</code> with a Bearer 
+        token of <code>XXXXXXXX</code> on January 20th, 2040, at 12:00 UTC, 
+        you would send the following HTTP request:
+      </p>
+      <pre>
+POST /micropub HTTP/1.1
+Host: futurepub.cleverdevil.io
+Content-Type: application/json
+Authorization: Bearer XXXXXXXX
+
+{
+  "type": ["h-entry"],
+  "properties": {
+    "name": ["Test Post from Futurepub"],
+    "content": [{
+      "html": "Hello, World!" 
+    }],
+    "published": [
+      "2040-01-20T12:00:00"
+    ],
+    "mp-destination": [
+      "https://example.com/micropub"
+    ]
+  }
+}
+      </pre>
+    </section>
+    
+    <section>
+      <h2>How Does it Work?</h2>
+      <p>
+        Futurepub does lightweight validation on the data passed to it, and
+        then stores the <code>JSON</code> payload along with the Bearer token
+        in a secure Amazon S3 bucket. A scheduled operation then checks the
+        S3 bucket periodically (currently, every five minutes), and then 
+        sends publish operations as needed.
+      </p>
+    </section>
+  </main>
+
 </body>
 </html>
