@@ -14,6 +14,8 @@ setup(
     author_email='jonathan@cleverdevil.org',
     install_requires=[
         "pecan",
+        "zappa",
+        "requests"
     ],
     test_suite='futurepub',
     zip_safe=False,
